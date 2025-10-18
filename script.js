@@ -32,24 +32,24 @@ function addition() {
     butdiv.appendChild(closeButton)
 
 
-    //time
-    const date=new Date();
-    const time=date.getHours();
-    const min=date.getMinutes();
-    const ampm=time>=12?'Pm':'Am';
-    const hour=time%12 || 12;
-    const month=date.getMonth()+1;
-    const year=date.getDate();
+    // will use later for time display
+    // const date=new Date();
+    // const time=date.getHours();
+    // const min=date.getMinutes();
+    // const ampm=time>=12?'Pm':'Am';
+    // const hour=time%12 || 12;
+    // const month=date.getMonth()+1;
+    // const year=date.getDate();
 
-    const pad=(n)=>n.toString().padStart(2,'0');
-    const timeString=`${pad(hour)}:${pad(min)}${ampm} ${pad(month)}/${pad(year)}`;
+    // const pad=(n)=>n.toString().padStart(2,'0');
+    // const timeString=`${pad(hour)}:${pad(min)}${ampm} ${pad(month)}/${pad(year)}`;
 
-    var t=document.createElement("div");
-    t.classList.add("timeClass");
+    // var t=document.createElement("div");
+    // t.classList.add("timeClass");
 
-    const p=document.createElement("p");
-    p.textContent=timeString;
-    t.appendChild(p);
+    // const p=document.createElement("p");
+    // p.textContent=timeString;
+    // t.appendChild(p);
     
 
 
@@ -59,7 +59,7 @@ function addition() {
 
     noteDiv.appendChild(butdiv);
     noteDiv.appendChild(pardiv);
-    noteDiv.appendChild(t);
+    // noteDiv.appendChild(t);
     container.insertAdjacentElement("afterbegin", noteDiv);
 
     inputField.value = "";
