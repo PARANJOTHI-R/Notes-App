@@ -1,0 +1,30 @@
+{
+  "defaults": {
+    "project": 1,
+    "env": 1
+  },
+  "actives": {
+    "project": 1,
+    "env": 1
+  },
+  "projects": [
+    {
+      "idx": 1,
+      "id": "16617000000117067",
+      "name": "Sticky-Notes",
+      "domain": {
+        "id": "50034968439",
+        "name": "sticky-notes-60039883184.development"
+      },
+      "timezone": "Asia/Kolkata",
+      "env": [
+        {
+          "idx": 1,
+          "id": "60039883184",
+          "name": "Development",
+          "type": 3
+        }
+      ]
+    }
+  ]
+}
