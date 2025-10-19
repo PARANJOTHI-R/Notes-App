@@ -4,10 +4,11 @@ const container = document.querySelector(".container");
 
 function handleSubmit(event) {
     event.preventDefault();
-    if (inputField.checkValidity()) {
+    var input=inputField.value.trim();
+    if(input!=""){
         addition();
-    } else {
-        window.alert("Enter the note");
+    }else{
+        window.alert("Enter a Note buddy!");
     }
 }
 

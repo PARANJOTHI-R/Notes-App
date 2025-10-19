@@ -23,8 +23,14 @@ header h1 {
 #add {
     display: flex;
     justify-content: center;
+    align-items: center;
     margin: 15px;
+    padding-left: 30px;
 }
+#add input::placeholder{
+    text-align: center;
+}
+
 .timeClass{
     z-index: 10;
 }
@@ -125,4 +131,30 @@ header h1 {
 .parClass p {
     padding: 10px;
     vertical-align: center;
+}
+
+@media screen and (max-width:600px){
+    .container{
+        flex-direction: column;
+        justify-content: center;
+    }
+    #add{
+        margin-left: 10px;
+        padding-left: 0px;
+    }
+    #note{
+        padding: 5px;
+        margin-left: 10%;
+    }
+    #note::placeholder{
+        text-align: center;
+    }
+    #add button{
+        padding: 5px;
+        border-radius: 10px;
+        margin-left: 2px;
+    }
+    .note1{
+        width: 70%;
+    }
 }
