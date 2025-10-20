@@ -1,0 +1,523 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const inputField = document.getElementById("note");
+    const container = document.querySelector(".container");
+    const overlay = document.querySelector(".overlay");
+    // const overlayNoteDiv = document.querySelector(".overlaynote"); // Not needed
+    const overlayParagraph = document.querySelector(".overlaynote .paragraph p");
+    const overlayCloseBtn = document.getElementById("overlayclosebtn");
+    const saveButton = document.querySelector(".editsave");
+
+    // Variable to hold the paragraph element of the note currently being edited
+    let currentNoteParagraph = null;
+
+    document.getElementById("add").addEventListener("submit", handleSubmit);
+
+    function handleSubmit(event) {
+        event.preventDefault();
+        var input = inputField.value.trim();
+        if (input !== "") {
+            addition();
+        } else {
+            window.alert("Enter a Note buddy! 😊");
+        }
+    }
+
+    function addition() {
+        const inputText = inputField.value.trim();
+        if (inputText === "") return;
+
+        const noteDiv = document.createElement("div");
+        noteDiv.classList.add("note1")
+
+        const butdiv = document.createElement("div")
+        butdiv.classList.add("butClass")
+
+        const editButton = document.createElement("button");
+        editButton.innerHTML = `<i class="fa-solid fa-pen-to-square"></i>`;
+        editButton.setAttribute("class", "edit-button");
+        butdiv.appendChild(editButton);
+
+        const pardiv = document.createElement("div")
+        pardiv.classList.add("parClass")
+
+        const closeButton = document.createElement("button");
+        closeButton.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        closeButton.setAttribute("class", "close-button");
+        closeButton.onclick = function () {
+            container.removeChild(noteDiv);
+        }
+        butdiv.appendChild(closeButton)
+
+        // Time display logic
+        const date = new Date();
+        const pad = (n) => n.toString().padStart(2, '0');
+        const timeString = `${pad(date.getHours() % 12 || 12)}:${pad(date.getMinutes())}${date.getHours() >= 12 ? 'Pm' : 'Am'} ${pad(date.getMonth() + 1)}/${date.getDate()}`;
+
+        var t = document.createElement("div");
+        t.classList.add("timeClass");
+
+        const p = document.createElement("p");
+        p.textContent = timeString;
+        t.appendChild(p);
+
+        const notePara = document.createElement("p");
+        notePara.textContent = inputText;
+        pardiv.appendChild(notePara)
+
+        noteDiv.appendChild(butdiv);
+        noteDiv.appendChild(pardiv);
+        noteDiv.appendChild(t);
+        container.insertAdjacentElement("afterbegin", noteDiv);
+
+        inputField.value = "";
+        
+        // NEW EDIT FUNCTIONALITY SETUP
+        editButton.addEventListener("click", () => {
+            // 1. Store a reference to the paragraph being edited
+            currentNoteParagraph = notePara;
+            // 2. Set the overlay content to the note's current text
+            overlayParagraph.textContent = currentNoteParagraph.textContent;
+            // 3. Make the paragraph editable
+            overlayParagraph.setAttribute('contenteditable', 'true');
+            // 4. Show the overlay
+            overlay.style.display = 'block';
+            // 5. Optionally focus the editable area
+            // You might need to focus the parent div if the paragraph doesn't accept focus well
+            overlayParagraph.focus();
+        });
+    }
+    
+    /**
+     * Closes the overlay and clears the contenteditable attribute.
+     */
+    function closeOverlay() {
+        overlay.style.display = 'none';
+        overlayParagraph.removeAttribute('contenteditable');
+        currentNoteParagraph = null; // Clear the reference
+    }
+
+    // Listener for the 'X' button in the overlay
+    overlayCloseBtn.addEventListener("click", closeOverlay);
+    
+    // 🔥 FIX: Listener to close the overlay when clicking the background
+    overlay.addEventListener("click", (event) => {
+        // Check if the click target is exactly the overlay element (the dark background)
+        if (event.target === overlay) {
+            closeOverlay();
+        }
+    });
+    
+    // Listener for the 'Save' button in the overlay
+    saveButton.addEventListener("click", () => {
+        if (currentNoteParagraph) {
+            // 1. Get the edited text
+            const newText = overlayParagraph.textContent.trim();
+            
+            // 2. Update the original note's text
+            currentNoteParagraph.textContent = newText;
+            
+            // 3. Update the time stamp to show when it was last edited
+            const noteDivToUpdate = currentNoteParagraph.closest('.note1');
+            const timeElement = noteDivToUpdate.querySelector('.timeClass p');
+            
+            const date = new Date();
+            const pad = (n) => n.toString().padStart(2, '0');
+            const newTimeString = `${pad(date.getHours() % 12 || 12)}:${pad(date.getMinutes())}${date.getHours() >= 12 ? 'Pm' : 'Am'} ${pad(date.getMonth() + 1)}/${date.getDate()} (Edited)`;
+            timeElement.textContent = newTimeString;
+            
+            // 4. Close the overlay
+            closeOverlay();
+        }
+    });
+});
+
+
+
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(253, 230, 230);
+}
+
+header {
+    text-align: center;
+    background-color: #6b9080;
+    color: rgb(237, 232, 232);
+    width: 100%;
+    height: 100px;
+}
+
+header h1 {
+    position: relative;
+    top: 30px;
+}
+
+#add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 15px;
+    padding-left: 30px;
+}
+#add input::placeholder{
+    text-align: center;
+}
+
+/* No change needed here, but keeping it clean */
+.timeClass{
+    z-index: 10; 
+}
+#note,
+#add button {
+    padding: 15px;
+    font-size: large;
+}
+
+#note {
+    width: 250px;
+    overflow: scroll;
+    border-radius: 15px;
+}
+
+#add button{
+    margin-left: 5px;
+    border-radius:15px ;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    color: white;
+}
+
+.note1 {
+    flex-basis: 20%;
+    flex-grow: 1;
+    position: relative;
+    text-align: center; 
+    left: 10px;
+    margin: 20px;
+    width: 250px;
+    height: 300px;
+    background-color:#c1e1c1;
+    border-radius: 20px;
+    overflow: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    color:#000000;
+}
+
+.container p {
+    font-size: 25px;
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.butClass {
+    position: sticky;
+    top: 0;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.parClass {
+    display: flex;
+    width: 100%;
+    height: 240px;
+    justify-content: center;
+    align-items: flex-start;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+
+.timeClass{
+    width: 100%;
+    height: auto;
+    text-align: end;
+}
+.timeClass p{
+    height: auto;
+    color: black;
+    font-weight: bolder;
+    text-align: right;
+    padding-right: 10px;
+    font-size: 15px;
+}
+
+.timeClass p:hover{
+    text-decoration:underline;
+}
+
+.parClass p {
+    padding: 10px;
+    vertical-align: center;
+}
+
+
+/* --- OVERLAY STYLES FIXES --- */
+
+.overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 9999; /* Ensure it's on top of everything */
+}
+
+.overlaynote {
+    /* z-index is handled by overlay parent */
+    position: relative;
+    text-align: center; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    margin: 20px;
+    width: 250px;
+    height: 300px;
+    background-color:#c1e1c1;
+    border-radius: 20px;
+    /* Removed redundant overflow/scroll properties from here */
+    color:#000000;
+    opacity: 1;
+}
+
+.overlaynote i{
+    font-size: 25px;
+    font-weight: bolder;
+    padding: 5px;
+    position: sticky;
+    top: 0;
+    left: 90%;
+}
+.paragraph{
+    padding: 0 15px;
+    font-size: 20px;
+    height: 240px;
+    overflow: auto;
+    scrollbar-width: none;
+}
+.editsave{
+    position: sticky;
+    bottom: -0.5%;
+    padding: 5px 10px;
+    margin-top: 10px;
+    border: none;
+    background-color: rgb(90, 177, 231);
+    color: rgb(255, 255, 255);
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: large;
+    width: 100%;
+}
+
+
+.edit-button i{
+    color: rgb(0, 0, 0);
+    font-size: 25px;
+    background-color: transparent white;
+    border-radius: 10px;
+    border: none;
+}
+
+.edit-button:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.close-button:hover{
+    cursor: pointer;
+}
+
+.close-button i{
+    color: rgb(255, 0, 0);
+    font-size: 28px;
+    font-weight: bolder;
+    background-color: transparent white;
+    border-radius: 10px;
+    border: none;
+}
+
+.butClass button{
+    background: transparent;
+    border: none;
+}
+
+@media screen and (max-width:800px){
+    .container{
+        flex-direction: column;
+        justify-content: center;
+    }
+    #add{
+        margin-left: 10px;
+        padding-left: 0px;
+    }
+    #note{
+        padding: 5px;
+        margin-left: 10%;
+    }
+    #note::placeholder{
+        text-align: center;
+    }
+    #add button{
+        padding: 5px;
+        border-radius: 10px;
+        margin-left: 2px;
+    }
+    .note1{
+        width: 70%;
+    }
+}
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Notes</title>
+    <link rel="icon" href="todo.webp">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <header>
+        <h1>Sticky Notes!</h1>
+    </header>
+    <form id="add">
+        <input id="note" placeholder="Enter your note😊">
+        <button type="submit">Add</button>
+    </form>
+    
+    <div class="overlay">
+        <div class="overlaynote">
+            <i id="overlayclosebtn" class="fa-solid fa-xmark"></i>
+            <div class="paragraph">
+                <p></p> </div>
+            <button class="editsave">Save</button>
+        </div>
+    </div>
+    
+    <div class="container">
+    </div>
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+?/// js before local storage
+document.addEventListener("DOMContentLoaded", () => {
+    const inputField = document.getElementById("note");
+    const container = document.querySelector(".container");
+
+    var saveFunction=()=>{
+        const notes=Array.from('.container .note1').map
+    }
+
+
+
+    document.getElementById("add").addEventListener("submit", handleSubmit);
+    function handleSubmit(event) {
+        event.preventDefault();
+        var input = inputField.value.trim();
+        if (input != "") {
+            addition();
+        } else {
+            window.alert("Enter a Note buddy!");
+        }
+    }
+
+    function addition() {
+        const inputText = inputField.value.trim();
+        if (inputText === "") return;
+
+        const noteDiv = document.createElement("div");
+        noteDiv.classList.add("note1")
+
+        const butdiv = document.createElement("div")
+        butdiv.classList.add("butClass")
+
+        const editButton = document.createElement("button");
+        editButton.innerHTML = `<i class="fa-solid fa-pen-to-square"></i>`;
+        editButton.setAttribute("class", "edit-button");
+        butdiv.appendChild(editButton);
+
+
+        const pardiv = document.createElement("div")
+        pardiv.classList.add("parClass")
+
+        const closeButton = document.createElement("button");
+        closeButton.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        closeButton.setAttribute("class", "close-button");
+        closeButton.onclick = function () {
+            container.removeChild(noteDiv);
+        }
+        butdiv.appendChild(closeButton)
+
+        // will use later for time display
+        const date = new Date();
+        const time = date.getHours();
+        const min = date.getMinutes();
+        const ampm = time >= 12 ? 'Pm' : 'Am';
+        const hour = time % 12 || 12;
+        const month = date.getMonth() + 1;
+        const year = date.getDate();
+
+        const pad = (n) => n.toString().padStart(2, '0');
+        const timeString = `${pad(hour)}:${pad(min)}${ampm} ${pad(month)}/${pad(year)}`;
+
+        var t = document.createElement("div");
+        t.classList.add("timeClass");
+
+        const p = document.createElement("p");
+        p.textContent = timeString;
+        t.appendChild(p);
+
+
+
+        const notePara = document.createElement("p");
+        notePara.textContent = inputText;
+        pardiv.appendChild(notePara)
+
+        noteDiv.appendChild(butdiv);
+        noteDiv.appendChild(pardiv);
+        noteDiv.appendChild(t);
+        container.insertAdjacentElement("afterbegin", noteDiv);
+
+        inputField.value = "";
+    }
+});
