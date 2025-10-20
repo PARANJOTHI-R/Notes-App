@@ -7,6 +7,9 @@
     <title>Sticky Notes</title>
     <link rel="icon" href="todo.webp">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="script.js" defer></script>
 </head>
 
@@ -14,10 +17,19 @@
     <header>
         <h1>Sticky Notes!</h1>
     </header>
-    <form id="add" onsubmit="handleSubmit(event)">
+    <form id="add">
         <input id="note" placeholder="Enter your note😊">
         <button type="submit">Add</button>
     </form>
+    <div class="overlay">
+        <div class="overlaynote">
+            <i id="overlayclosebtn" class="fa-solid fa-xmark"></i>
+            <div class="paragraph">
+                <p></p>
+            </div>
+            <button class="editsave">Save</button>
+        </div>
+    </div>
     <div class="container">
     </div>
 </body>
