@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pad = (n) => {
                 return n.toString().padStart(2, '0');
             }
-            timeString = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}`;
+            timeString = `${pad(hour)}:${pad(minute)}${ampm} ${pad(day)}/${pad(month)}`;
         }
         // edit and close button division
         const noteDiv = document.createElement("div");
@@ -125,9 +125,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     return n.toString().padStart(2, '0');
                 }
                 if (!timeP.textContent.includes("(Edited)")) {
-                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}` + " (Edited)";
+                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(day)}/${pad(month)}` + " (Edited)";
                 }else{
-                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}`;
+                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(day)}/${pad(month)}`;
                 }
 
                 saveData();
