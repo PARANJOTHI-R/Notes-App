@@ -128,7 +128,7 @@ header h1 {
 }
 
 
-.overlay{
+/* .overlay{
     position: fixed;
     width: 100%;
     height: 100%;
@@ -139,7 +139,7 @@ header h1 {
 }
 
 .overlaynote {
-    /* z-index: 4; */
+    z-index: 4;
     position: relative;
     text-align: center; 
     top: 50%;
@@ -165,7 +165,7 @@ header h1 {
     position: sticky;
     top: 0;
     left: 90%;
-}
+} */
 .paragraph{
     padding: 0 15px;
     font-size: 20px;
@@ -220,6 +220,90 @@ header h1 {
     background: transparent;
     border: none;
 }
+
+/*overlay styling*/
+.overlay{
+    z-index: 10;
+    display: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:rgba(0, 0, 0,0.6);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    color: white;
+}
+
+/*hide class*/
+.overlay-hide{
+    display: none;
+}
+
+.overlay-show{
+    display:block;
+}
+
+#popup{
+    color: black;
+    text-align: center;
+    position: fixed;
+    padding: 20px;
+    width: 300px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+}
+
+#edit-note{
+    border-radius: 5px;
+    height: 150px;
+    padding: 5px;
+    overflow: scroll;
+    scrollbar-width: none;
+    font-size: 20px;
+    border: none;
+    outline: none;
+}
+
+#edit-note:focus{
+    outline: none;
+    border: none;
+}
+
+.popup-buttons{
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    justify-content: space-between;
+  
+}
+
+.popup-buttons button{
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    border: none;
+    transition: all 0.3s;
+    cursor:pointer;
+}
+
+#overlay-save:hover{
+    color: white;
+    background-color: rgb(27, 191, 60);
+    transform: scale(1.1);
+}
+#overlay-cancel:hover{
+    color: rgb(255, 255, 255);
+    background-color: rgba(203, 0, 0, 0.701);
+    transform: scale(1.1);
+}
+
 
 @media screen and (max-width:800px){
     .container{

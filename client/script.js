@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector(".container");
     const STORAGE_KEY = 'Sticky_Notes';
 
+
+    let currentnote = null;
+
     const saveData = () => {
         const allNotes = Array.from(container.querySelectorAll(".note1"));
 
@@ -26,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const addElement = (inputText, existingTime = null) => {
-        if(inputText==="")return;
+        if (inputText === "") return;
 
         let timeString;
         if (existingTime) {
@@ -36,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const time = date.getHours();
             const minute = date.getMinutes()
             const ampm = time >= 12 ? 'Pm' : 'Am';
-            const hour = time % 12||12;
+            const hour = time % 12 || 12;
             const day = date.getDate();
             const month = date.getMonth() + 1;
 
@@ -45,45 +48,101 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             timeString = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}`;
         }
-            // edit and close button division
-            const noteDiv = document.createElement("div");
-            noteDiv.setAttribute("class", "note1");
+        // edit and close button division
+        const noteDiv = document.createElement("div");
+        noteDiv.setAttribute("class", "note1");
 
-            const buttonDiv = document.createElement("div");
-            buttonDiv.setAttribute("class", "butClass");
+        const buttonDiv = document.createElement("div");
+        buttonDiv.setAttribute("class", "butClass");
 
-            const editButton = document.createElement("button");
-            editButton.innerHTML = `<i class="fa-solid fa-pen-to-square"></i>`;
-            editButton.setAttribute("class", "edit-button");
-            buttonDiv.appendChild(editButton);
+        const editButton = document.createElement("button");
+        editButton.innerHTML = `<i class="fa-solid fa-pen-to-square"></i>`;
+        editButton.setAttribute("class", "edit-button");
 
-            const closeButton = document.createElement("button");
-            closeButton.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
-            closeButton.setAttribute("class", "close-button");
-            closeButton.onclick = function () {
-                container.removeChild(noteDiv);
-                saveData();
-            }
-            buttonDiv.appendChild(closeButton)
-            //inner paragraph division
-            const paragraphDiv = document.createElement("div");
-            paragraphDiv.setAttribute("class", "parClass");
-            paragraphDiv.innerHTML=`<p>${inputText}</p>`;
+        editButton.addEventListener("click", () => {
+            overlay.classList.remove('overlay-hide');
+            overlay.classList.add('overlay-show');
+            currentnote = noteDiv;
+            overlayinput.value = noteDiv.querySelector(".innercontent").textContent;
+        });
+        buttonDiv.appendChild(editButton);
 
-            const timeDiv = document.createElement("div");
-            timeDiv.setAttribute("class", "timeClass");
-            timeDiv.innerHTML=`<p>${timeString}</p>`;
+        const closeButton = document.createElement("button");
+        closeButton.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        closeButton.setAttribute("class", "close-button");
+        closeButton.onclick = function () {
+            container.removeChild(noteDiv);
+            saveData();
+        }
+        buttonDiv.appendChild(closeButton)
+        //inner paragraph division
 
-            noteDiv.appendChild(buttonDiv);
-            noteDiv.appendChild(paragraphDiv);
-            noteDiv.appendChild(timeDiv);
-            container.insertAdjacentElement("afterbegin",noteDiv);
+        const paragraphDiv = document.createElement("div");
+        paragraphDiv.setAttribute("class", "parClass");
+        paragraphDiv.innerHTML = `<p class="innercontent">${inputText}</p>`;
 
-            if(!existingTime){
-                inputField.value="";
-                saveData();
-            }
+        const timeDiv = document.createElement("div");
+        timeDiv.setAttribute("class", "timeClass");
+        timeDiv.innerHTML = `<p>${timeString}</p>`;
+
+        noteDiv.appendChild(buttonDiv);
+        noteDiv.appendChild(paragraphDiv);
+        noteDiv.appendChild(timeDiv);
+        container.insertAdjacentElement("afterbegin", noteDiv);
+
+        if (!existingTime) {
+            inputField.value = "";
+            saveData();
+        }
     }
+    /*overlayfunction*/
+    const overlay = document.querySelector(".overlay");
+    const overlaycancel = document.getElementById("overlay-cancel");
+    const overlaysave = document.getElementById("overlay-save");
+    const overlayinput = document.getElementById("edit-note");
+
+    overlaysave.addEventListener("click", (event) => {
+        event.preventDefault();
+        overlay.classList.remove('overlay-show');
+        overlay.classList.add("overlay-hide");
+
+        if (currentnote) {
+            const newText = overlayinput.value.trim();
+            if (newText !== "") {
+                currentnote.querySelector(".innercontent").textContent = newText;
+
+                // Update time with "(Edited)"
+                const timeP = currentnote.querySelector(".timeClass p");
+                const date = new Date();
+                const time = date.getHours();
+                const minute = date.getMinutes()
+                const ampm = time >= 12 ? 'Pm' : 'Am';
+                const hour = time % 12 || 12;
+                const day = date.getDate();
+                const month = date.getMonth() + 1;
+
+                const pad = (n) => {
+                    return n.toString().padStart(2, '0');
+                }
+                if (!timeP.textContent.includes("(Edited)")) {
+                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}` + " (Edited)";
+                }else{
+                    timeP.textContent = `${pad(hour)}:${pad(minute)}${ampm} ${pad(month)}/${pad(day)}`;
+                }
+
+                saveData();
+            }
+        }
+        currentnote = null;
+
+    });
+
+    overlaycancel.addEventListener("click", () => {
+        overlay.classList.remove('overlay-show');
+        overlay.classList.add('overlay-hide');
+        currentnote = null;
+    });
+
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -96,4 +155,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     document.getElementById("add").addEventListener("submit", handleSubmit);
     loadNotesFromStorage();
+
 });
